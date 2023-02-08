@@ -1,0 +1,92 @@
+<div class="card mt-2">
+  <div class="card-header">Please fill out the form</div>
+
+  <div class="card-body">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div *ngFor="let data of formData">
+        <div class="form-group row mb-2">
+          <label class="col-md-2 col-form-label" for={{data.formControlName}}>{{data.label}}</label>
+          <div class="col-md-8">
+            <input class="form-control" id={{data.formControlName}} type="text" formControlName={{data.formControlName}}
+              placeholder="{{data.label}} (required)"
+              [ngClass]="{'is-invalid': (userForm.get(data.formControlName)?.touched || userForm.get(data.formControlName)?.dirty) && userForm.get(data.formControlName)?.invalid}" />
+            <span class="invalid-feedback">
+              <span *ngIf="userForm.get(data.formControlName)?.errors?.required">
+                Please enter your {{data.label}}.
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row mt-4 mb-4">
+        <div class="col-md-2 mb-2">
+          <button type="button" (click)="addAdditionalHobby()" class="btn btn-outline-secondary" style="width:190px">
+            Add Additional Hobby
+          </button>
+        </div>
+
+        <ng-container *ngFor="let hobby of hobbiesFormGroups; let i = index">
+          <div class="input-group mb-4" [formGroup]="hobby">
+            <label [for]="'additionalHobbies' + i" class="col-md-2 col-form-label">Hobby</label>
+            <div class="col-md-6">
+              <input type="text" class="form-control" [id]="'name' + i" formControlName="addHobby" />
+            </div>
+            <div class="input-group-append ms-2">
+              <button class="btn btn-outline-danger" type="button" (click)="removeAdditionalHobby(i)">Delete
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <div class="form-group row mb-2">
+          <div class="offset-md-4 col-md-8">
+            <button class="btn btn-outline-primary mr-3" type="button" style="width:100px" (click)="resetForm()">
+              Reset
+            </button>
+            <button class="btn btn-primary mr-3 offset-md-2" type="button" style="width:100px" (click)="viewFormData()">
+              View
+            </button>
+          </div>
+        </div>
+
+        <ng-container *ngIf="preview" class="container">
+          <h5>Result</h5>
+          <div class="form-group row mb-2">
+            <label class="col-md-2">Name</label>
+            <div class="col-md-8 offset-md-2">
+              {{formValue.firstName}} {{formValue.lastName}}
+            </div>
+          </div>
+          <div class="form-group row mb-2">
+            <label class="col-md-2">Email</label>
+            <div class="col-md-8 offset-md-2">
+              {{formValue.email}}
+            </div>
+          </div>
+          <div class="form-group row mb-2">
+            <label class="col-md-2">Hobbies</label>
+            <div class="col-md-8 offset-md-2">
+              {{formValue.hobby1}} {{formValue.hobby2}} {{formValue.hobby3}}
+              <span *ngFor="let hobby of formValue.hobbies">
+                {{hobby.addHobby}}
+              </span>
+            </div>
+          </div>
+          <div class="form-group row mb-2">
+            <div class="offset-md-4 col-md-8">
+              <button class="btn btn-outline-primary mr-3" type="button" style="width:150px" (click)="removePreview()">
+                Remove Result
+              </button>
+              <button class="btn btn-primary mr-3 offset-md-2" type="submit" name="submitBtn" style="width:100px"
+                [disabled]="userForm.invalid">
+                Save
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+    </form>
+  </div>
+</div>
